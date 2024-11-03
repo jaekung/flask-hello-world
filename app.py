@@ -31,6 +31,45 @@ def db_create():
     conn.close()
     return "Basketball table successfully created"
 
+@app.route('/db_insert')
+def db_insert():
+    conn = psycopg2.connect("postgresql://jaekung_postgresql_db_user:CkLia5sQ3nvjEvtuTb8zCzpr20H6t606@dpg-csjum5hu0jms73b5irp0-a/jaekung_postgresql_db")
+    cur = conn.cursor()
+    cur.execute('''
+    INSERT INTO Basketball (First, Last, City, Name, Number)
+    Values
+    ('Jayson', 'Tatum', 'Boston', 'Celtics', 0),
+    ('Stephen', 'Curry', 'San Francisco', 'Warriors', 30),
+    ('Nikola', 'Jokic', 'Denver', 'Nuggets', 15),
+    ('Kawhi', 'Leonard', 'Los Angeles', 'Clippers', 2);
+    ''')
+    conn.commit()
+    conn.close()
+    return "Basketball table successfully populated"
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/db_select')
+def db_select():
+    conn = psycopg2.connect("postgresql://jaekung_postgresql_db_user:CkLia5sQ3nvjEvtuTb8zCzpr20H6t606@dpg-csjum5hu0jms73b5irp0-a/jaekung_postgresql_db")
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Basketball;")
+    records = cur.fetchall()
+    conn.close()
+    
+    # Display the query result in HTML format
+    response_str = "<table><tr>"
+    for row in records:
+        for column in row:
+            response_str += f"<td>{column}</td>"
+        response_str += "</tr>
+    response_str += "</table>
+    
+    return response_str
+
+@app.route('/db_drop')
+def db_drop():
+    conn = psycopg2.connect("postgresql://jaekung_postgresql_db_user:CkLia5sQ3nvjEvtuTb8zCzpr20H6t606@dpg-csjum5hu0jms73b5irp0-a/jaekung_postgresql_db")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS Basketball")
+    conn.commit()
+    conn.close()
+    return "Basketball table successfully dropped"
