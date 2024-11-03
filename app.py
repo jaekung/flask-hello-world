@@ -60,8 +60,8 @@ def db_select():
     for row in records:
         for column in row:
             response_str += f"<td>{column}</td>"
-        response_str += "</tr>
-    response_str += "</table>
+        response_str += "</tr>"
+    response_str += "</table>"
     
     return response_str
 
